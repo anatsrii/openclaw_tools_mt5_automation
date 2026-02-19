@@ -1,0 +1,10 @@
+{
+  "mt5_installation_path": "C:\\Program Files\\MetaTrader 5\\",
+  "mt5_data_path": "C:\\Users\\JML-PC\\.openclaw\\tools\\metatrader5",
+  "mt5_terminalini": "C:\\Program Files\\MetaTrader 5\\config\\terminal.ini",
+  "mt5_logs": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\logs",
+  "mt5_profiles": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\profiles",
+  "mt5_experts": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\MQL5\\Experts",
+  "mt5_indicators": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\MQL5\\Indicators",
+  "mt5_scripts": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\MQL5\\Scripts"
+}

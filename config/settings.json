@@ -1,0 +1,36 @@
+{
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "log_file": "c:\\Users\\JML-PC\\.openclaw\\tools\\mt5_automation\\logs\\mt5_automation.log",
+    "max_bytes": 10485760,
+    "backup_count": 5
+  },
+  "notifications": {
+    "enabled": true,
+    "notification_type": "system",
+    "email": {
+      "enabled": false,
+      "smtp_server": "smtp.gmail.com",
+      "smtp_port": 587,
+      "use_tls": true
+    }
+  },
+  "scheduler": {
+    "enabled": true,
+    "timezone": "UTC",
+    "thread_pool_size": 4
+  },
+  "process": {
+    "startup_timeout": 30,
+    "shutdown_timeout": 10,
+    "check_interval": 5,
+    "max_retries": 3
+  },
+  "file_operations": {
+    "backup_on_export": true,
+    "verify_integrity": true,
+    "compression": "zip"
+  },
+  "debug_mode": false
+}
