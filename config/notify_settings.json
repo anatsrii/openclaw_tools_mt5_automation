@@ -1,0 +1,24 @@
+{
+  "telegram": {
+    "bot_token": "",
+    "chat_id": ""
+  },
+  "line": {
+    "token": ""
+  },
+  "discord": {
+    "webhook_url": ""
+  },
+  "email": {
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "sender_email": "",
+    "sender_password": "",
+    "recipient_email": ""
+  },
+  "enabled_channels": [
+    "telegram"
+  ],
+  "min_severity": "info",
+  "queue_timeout": 5.0
+}
