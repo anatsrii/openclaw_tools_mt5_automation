@@ -42,9 +42,9 @@ tmpclaude-*.cwd
 *.tmp
 *.temp
 
-# Logs
+# Logs (but not tools/logs module)
+/logs/
 *.log
-logs/
 
 # Testing
 .pytest_cache/
