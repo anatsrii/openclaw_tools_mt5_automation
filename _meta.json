@@ -1,0 +1,23 @@
+{
+  "name": "mt5_automation",
+  "version": "3.0.0",
+  "description": "MetaTrader 5 automation skill - compile, backtest, optimize, and manage EAs",
+  "author": "anatsrii",
+  "license": "MIT",
+  "keywords": ["mt5", "metatrader", "trading", "backtest", "optimization", "ea"],
+  "requires": {
+    "python": ">=3.8",
+    "packages": [
+      "MetaTrader5",
+      "psutil",
+      "pywin32",
+      "pyautogui",
+      "watchdog",
+      "APScheduler",
+      "requests",
+      "python-dateutil"
+    ]
+  },
+  "entry": "__init__.py",
+  "has_skill_md": true
+}

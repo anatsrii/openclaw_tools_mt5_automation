@@ -1,121 +1,203 @@
 # MT5 Automation Skill - Complete Guide
 
 **OpenClaw Skill:** `mt5_automation`
-**Version:** 2.0 (Phase 1 + Phase 2)
-**Latest:** Production-ready with 10 integrated tools
+**Version:** 3.0 (Central Config + Completed Phase 2)
+**Updated:** 2026-02
 
 ---
 
 ## 📋 Quick Navigation
 
-- [Overview](#overview) - What this skill does
-- [10 Tools](#10-tools-summary) - All tools at a glance
-- [Quick Start](#quick-start) - Get started in 5 minutes
-- [Workflows](#common-workflows) - Copy-paste examples
-- [Config](#configuration) - Setup instructions
-- [Troubleshooting](#troubleshooting) - Common issues
+- [Overview](#overview)
+- [Quick Setup](#quick-setup) ← เริ่มที่นี่
+- [user_config.json](#user_configjson--ไฟล์ตั้งค่าหลัก) ← แก้ไฟล์เดียวจบ
+- [10 Tools](#10-tools-summary)
+- [Workflows](#common-workflows)
+- [API Reference](#api-quick-reference)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Overview
 
-The **MT5 Automation Skill** provides complete system automation for MetaTrader 5:
+ระบบ automation ครบวงจรสำหรับ MetaTrader 5 บน Windows
 
-✅ **Compile & Deploy** - Auto-fix compilation errors, deploy EA to charts
-✅ **Backtest** - Run silent backtests with structured results
-✅ **Optimize** - Parameter optimization with walk-forward validation
-✅ **Trade** - Monitor positions, emergency close, profit/loss tracking
-✅ **Monitor** - System health, bot status, account security
-✅ **Notify** - Telegram, Line, Discord, Email alerts
-✅ **Schedule** - Cron + market session-based scheduling
-✅ **Analyze** - Log parsing, trade history, anomaly detection
+```
+✅ Compile & Deploy   — เขียน/แก้ EA, compile, deploy ลง chart
+✅ Backtest           — รัน Strategy Tester แบบ silent
+✅ Optimize           — หา parameter ที่ดีที่สุด + Walk-Forward
+✅ Trade              — ดู position, emergency close, PnL
+✅ Monitor            — สุขภาพระบบ, bot status, account
+✅ Notify             — Telegram, Line, Email
+✅ Schedule           — Cron + market session-based
+✅ Analyze            — อ่าน log, trade history, anomaly detection
+```
 
 ### Architecture
 
 ```
-Phase 2 Application Layer (5 tools)
-  Developer, Operator, Tester, Optimizer, Manager
-         ↓ (imports & uses)
-Phase 1 Infrastructure Layer (5 tools)
-  Process, Files, Logs, Notifier, Scheduler
+┌─────────────────────────────────────────────┐
+│          user_config.json                   │  ← แก้ที่นี่ที่เดียว
+│   (symbol, path, terminal_id, dates, ...)   │
+└──────────────────┬──────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────┐
+│          config/config.py                   │  ← build paths อัตโนมัติ
+└──────────────────┬──────────────────────────┘
+                   │
+       ┌───────────┴────────────┐
+       ▼                        ▼
+Phase 1: Infrastructure    Phase 2: Application
+  process, files, logs       developer, tester,
+  notify, scheduler          optimizer, manager,
+                             operator
 ```
 
 ---
 
-## 10 Tools Summary
+## Quick Setup
 
-### Phase 1: Infrastructure (System Level)
-
-| Tool | Purpose | Install | Key Functions |
-|------|---------|---------|---------------|
-| **Process Control** | Start/stop/monitor MT5 | Built-in | `start_mt5()`, `stop_mt5()`, `watch_mt5()` |
-| **File Manager** | Manage EA + backups | Built-in | `read_ea_file()`, `backup_ea()`, `list_eas()` |
-| **Log Parser** | Extract logs + trades | Built-in | `get_journal()`, `get_trades()`, `detect_anomalies()` |
-| **Notifier** | Multi-channel alerts | `pip install requests` | `send()`, `send_trade_alert()`, `send_error()` |
-| **Scheduler** | Market session + cron | `pip install apscheduler` | `get_session()`, `schedule_task()`, `is_open()` |
-
-### Phase 2: Application (Business Logic)
-
-| Tool | Purpose | Install | Key Functions |
-|------|---------|---------|---------------|
-| **Developer** | Compile + deploy EA | `pip install pyautogui` | `compile_ea()`, `deploy_ea()` |
-| **Operator** | Live position management | `pip install MetaTrader5` | `get_positions()`, `close_all()` |
-| **Tester** | Silent backtesting | Built-in | `run_backtest()`, `get_report()` |
-| **Optimizer** | Parameter optimization | Built-in | `run_optimization()`, `walk_forward()` |
-| **Manager** | System health + bots | Built-in | `get_health()`, `list_bots()` |
-
----
-
-## Quick Start
-
-### 1. Installation
+### 1. ติดตั้ง Dependencies
 
 ```bash
-# Core tools (no extra install)
-cd ~ /.openclaw/tools/mt5_automation/
-
-# Optional dependencies
-pip install requests apscheduler MetaTrader5 pyautogui
+pip install MetaTrader5 psutil pywin32 pyautogui watchdog APScheduler requests python-dateutil
 ```
 
-### 2. Configure
+### 2. ตั้งค่า (แค่ไฟล์เดียว)
 
-Create `config/notify_settings.json`:
+แก้ไขที่ `config/user_config.json` เท่านั้น:
+
+```json
+{
+  "mt5": {
+    "terminal_id": "ใส่ Terminal ID ของคุณ",
+    "installation_path": "C:\\Program Files\\MetaTrader 5",
+    "username": "ชื่อ Windows user ของคุณ"
+  },
+  "trading": {
+    "default_symbol": "XAUUSDm",
+    "default_timeframe": 1
+  }
+}
+```
+
+> **หา Terminal ID:** เปิด `C:\Users\[username]\AppData\Roaming\MetaQuotes\Terminal\`
+> โฟลเดอร์ชื่อยาวๆ ที่อยู่ในนั้นคือ Terminal ID
+
+### 3. ตั้งค่า Telegram (optional)
+
+แก้ `config/notify_settings.json`:
 ```json
 {
   "telegram": {
     "bot_token": "YOUR_BOT_TOKEN",
     "chat_id": "YOUR_CHAT_ID"
   },
-  "enabled_channels": ["telegram"],
-  "min_severity": "info"
+  "enabled_channels": ["telegram"]
 }
 ```
 
-### 3. First Script
+### 4. Validate
 
-```python
-from tools.process import start_mt5, get_mt5_status
-from tools.notify import send
-from tools.scheduler import get_current_session
-
-# Ensure MT5 is running
-if not get_mt5_status()["is_running"]:
-    start_mt5()
-
-# Check market session
-session = get_current_session()
-print(f"Session: {session['sessions']}")
-
-# Send notification
-send("✅ System online", severity="info")
+```bash
+python config/config.py
 ```
 
-### 4. Run Tests
+ผลลัพธ์ที่ควรเห็น:
+```
+=== MT5 Config Summary ===
+Terminal ID : D0E8209F77C8CF37AD8BF550E51FF075
+Install     : C:\Program Files\MetaTrader 5
+...
+=== Path Validation ===
+  ✅ terminal.exe
+  ✅ data_path
+  ✅ experts_path
+  ✅ All paths OK
+```
+
+### 5. รัน Tests
 
 ```bash
 python tests/test_all.py
 ```
+
+---
+
+## `user_config.json` — ไฟล์ตั้งค่าหลัก
+
+> แก้ไฟล์นี้ไฟล์เดียว ทั้งระบบอัปเดตทันที ไม่ต้องแตะโค้ดอื่น
+
+```json
+{
+  "mt5": {
+    "terminal_id": "D0E8209F77C8CF37AD8BF550E51FF075",   ← Terminal ID
+    "installation_path": "C:\\Program Files\\MetaTrader 5", ← ที่ติดตั้ง MT5
+    "username": "JML-PC"                                  ← Windows username
+  },
+
+  "trading": {
+    "default_symbol": "XAUUSDm",      ← คู่เหรียญ default
+    "default_timeframe": 1,           ← TF เป็นนาที (1=M1, 5=M5, ...)
+    "symbols": ["XAUUSDm", "XAUUSDm.c"], ← รายการคู่เหรียญทั้งหมด
+    "default_date_from": "2024.01.01",   ← วันเริ่ม backtest
+    "default_date_to": "2024.12.31"      ← วันสิ้นสุด backtest
+  },
+
+  "backtest": {
+    "deposit": 10000,      ← เงินทุนจำลอง (USD)
+    "currency": "USD",
+    "leverage": 100,       ← leverage
+    "model": 1,            ← 0=Every tick, 1=1min OHLC, 2=Open price
+    "timeout_seconds": 300 ← timeout ต่อ 1 backtest
+  },
+
+  "optimization": {
+    "top_n_results": 10,            ← คืนผลลัพธ์ top N
+    "criterion": 2,                 ← 0=Balance, 1=DD, 2=ProfitFactor, 3=Sharpe
+    "wf_windows": 4,               ← จำนวน window สำหรับ Walk-Forward
+    "wf_test_ratio": 0.3,          ← สัดส่วน Out-of-Sample (30%)
+    "wf_efficiency_threshold": 0.7, ← เกณฑ์ "robust" (70%)
+    "timeout_per_window": 900       ← timeout ต่อ 1 window (วินาที)
+  }
+}
+```
+
+### กรณีที่ต้องแก้ไข
+
+| สถานการณ์ | แก้ key ไหน |
+|-----------|-------------|
+| เปลี่ยนโบรกเกอร์ (Terminal ID ใหม่) | `mt5.terminal_id` |
+| ย้ายเครื่อง / reinstall MT5 | `mt5.installation_path`, `mt5.username` |
+| เปลี่ยนคู่เหรียญที่ test | `trading.default_symbol`, `trading.symbols` |
+| เปลี่ยนช่วงเวลา backtest | `trading.default_date_from/to` |
+| เปลี่ยน capital สำหรับ test | `backtest.deposit`, `backtest.leverage` |
+| ปรับ Walk-Forward windows | `optimization.wf_windows` |
+
+---
+
+## 10 Tools Summary
+
+### Phase 1: Infrastructure
+
+| Tool | Purpose | Key Functions |
+|------|---------|---------------|
+| **process** | Start/stop/monitor MT5 | `start_mt5()`, `stop_mt5()`, `watch_mt5()` |
+| **files** | จัดการไฟล์ EA + backup | `read_ea_file()`, `backup_ea()`, `list_eas()` |
+| **logs** | อ่าน journal + trade log | `get_latest_journal()`, `get_trade_history()`, `detect_anomalies()` |
+| **notify** | ส่ง alert ทุกช่องทาง | `send()`, `send_trade_alert()`, `send_daily_report()` |
+| **scheduler** | Market session + cron | `get_current_session()`, `schedule_task()`, `is_market_open()` |
+
+### Phase 2: Application
+
+| Tool | Purpose | Key Functions | สถานะ |
+|------|---------|---------------|--------|
+| **developer** | Compile + deploy EA | `compile_ea()`, `compile_and_fix()`, `deploy_ea()` | ✅ |
+| **tester** | Silent backtesting | `run_backtest()`, `run_multi_backtest()`, `get_tester_report()` | ✅ |
+| **optimizer** | Parameter optimization + WF | `run_optimization()`, `walk_forward_test()` | ✅ |
+| **manager** | System health + account | `get_system_health()`, `list_active_bots()`, `switch_account()` | ✅ |
+| **operator** | Live trade management | `get_open_positions()`, `close_all_positions()`, `get_account_summary()` | ✅ |
 
 ---
 
@@ -126,14 +208,55 @@ python tests/test_all.py
 ```python
 from tools.developer import compile_and_fix, deploy_ea
 
-# Compile with auto-fix loop
-result = compile_and_fix("MyEA", max_attempts=3)
+result = compile_and_fix("SukarEA", max_attempts=3)
 if result["success"]:
-    deploy_ea("MyEA", "EURUSD", 240)  # 4H chart
+    deploy_ea("SukarEA", "XAUUSDm", 1)  # M1 chart
     print("✅ Deployed!")
 else:
-    print(f"❌ {len(result['final_errors'])} errors remaining")
+    print(f"❌ Errors: {result['final_errors']}")
 ```
+
+---
+
+### 📊 Backtest (ใช้ค่า default จาก user_config.json)
+
+```python
+from tools.tester import run_backtest
+
+# ใช้ค่า default ทั้งหมด (XAUUSDm, M1, ช่วงวันที่ที่ตั้งไว้)
+result = run_backtest("SukarEA")
+
+# Override เฉพาะบางค่า
+result = run_backtest("SukarEA", symbol="XAUUSDm.c", date_from="2025.01.01")
+
+print(f"PF={result['profit_factor']:.2f} | DD={result['drawdown']:.1f}% | Trades={result['total_trades']}")
+```
+
+---
+
+### ⚙️ Optimize + Walk-Forward
+
+```python
+from tools.optimizer import run_optimization, walk_forward_test
+
+param_ranges = {
+    "TakeProfit":  (20, 100, 5),   # min, max, step
+    "StopLoss":    (10, 60, 5),
+    "FastEMA":     (5, 20, 1),
+    "SlowEMA":     (20, 50, 5),
+}
+
+# Optimize (ใช้ symbol + dates จาก user_config)
+opt = run_optimization("SukarEA", param_ranges)
+print(f"Best PF: {opt['top_params'][0]['profit_factor']}")
+
+# Walk-Forward (ใช้ค่า default ทั้งหมด)
+wf = walk_forward_test("SukarEA", param_ranges)
+print(f"WF Efficiency: {wf['wf_efficiency']:.2f}")
+print(f"Robust: {'✅' if wf['summary']['is_robust'] else '⚠️ ไม่แนะนำใช้ live'}")
+```
+
+---
 
 ### 🚨 Emergency Close All
 
@@ -142,50 +265,51 @@ from tools.operator import get_open_positions, close_all_positions
 from tools.notify import send
 
 positions = get_open_positions()
-total_pnl = positions["total_pnl"]
-
-if total_pnl < -1000:  # Lose more than $1000
-    close_all_positions(comment="Risk limit exceeded!")
-    send("🚨 Closed all positions!", severity="critical")
+if positions["total_pnl"] < -500:
+    result = close_all_positions(comment="Risk limit exceeded")
+    send(f"🚨 Closed {result['closed_count']} positions", severity="critical")
 ```
 
-### 📊 Weekly Report
+---
+
+### 🩺 System Health Check
 
 ```python
-from tools.logs import get_trade_history
-from tools.operator import get_account_summary
-from tools.notify import send_daily_report
+from tools.manager import get_system_health, list_active_bots
 
-trades = get_trade_history(hours=24*7)  # 1 week
-account = get_account_summary()
-wins = len([t for t in trades["trades"] if t["profit"] > 0])
+health = get_system_health()
+print(f"Status    : {health['status']}")          # healthy / degraded / critical
+print(f"MT5       : {'✅' if health['mt5_running'] else '❌'}")
+print(f"Session   : {health['current_session']}")
+print(f"Active EAs: {health['active_bots']}")
 
-send_daily_report(
-    total_profit=sum(t["profit"] for t in trades["trades"]),
-    trade_count=len(trades["trades"]),
-    wins=wins,
-    losses=len(trades["trades"]) - wins
-)
+if health["issues"]:
+    for issue in health["issues"]:
+        print(f"⚠️  {issue}")
 ```
 
-### ⏰ Schedule Task at Market Open
+---
+
+### ⏰ Schedule Task
 
 ```python
 from tools.scheduler import schedule_task, wait_for_session
+from tools.tester import run_backtest
 
-def start_trading():
-    print("London session opened! Starting EA...")
-    # trading logic here
+# รัน backtest ทุกวันตี 4
+def weekly_backtest():
+    run_backtest("SukarEA")
 
-# Option 1: Cron (specific time)
-schedule_task(start_trading, "cron", cron_expr="14 * * * 1-5")
+schedule_task(weekly_backtest, "cron", cron_expr="0 4 * * 1")  # ทุกวันจันทร์ ตี 4
 
-# Option 2: Wait for session to open
+# รอ London session เปิด
 wait_for_session("London")
-start_trading()
+print("London opened!")
 ```
 
-### 🔍 Continuous Monitoring
+---
+
+### 🔄 Continuous Monitoring
 
 ```python
 from tools.process import watch_mt5
@@ -193,104 +317,48 @@ from tools.notify import send
 
 def on_crash(event_type, data):
     if event_type == "crash_detected":
-        send("🔴 MT5 crashed!", severity="critical")
+        send("🔴 MT5 crashed! Restarting...", severity="critical")
 
-# Watch and auto-restart
 watch_mt5(interval=60, auto_restart=True, callback=on_crash)
-```
-
----
-
-## Configuration
-
-### MT5 Paths: `config/mt5_paths.json`
-
-Auto-detected on first run to:
-- MT5 installation directory
-- Terminal data folder
-- MQL5 export paths
-
-Manually edit if auto-detection fails:
-```json
-{
-  "mt5_installation_path": "C:\\Program Files\\MetaTrader 5\\",
-  "mt5_data_path": "C:\\Users\\YourName\\AppData\\Roaming\\MetaQuotes\\Terminal\\"
-}
-```
-
-### Notifications: `config/notify_settings.json`
-
-Each channel is optional:
-```json
-{
-  "telegram": {
-    "bot_token": "TOKEN",
-    "chat_id": "CHAT_ID"
-  },
-  "line": {"token": "TOKEN"},
-  "discord": {"webhook_url": "URL"},
-  "email": {
-    "smtp_server": "smtp.gmail.com",
-    "sender_email": "you@gmail.com",
-    "sender_password": "APP_PASSWORD"
-  },
-  "enabled_channels": ["telegram"],
-  "min_severity": "info"
-}
 ```
 
 ---
 
 ## API Quick Reference
 
-### Process
 ```python
-from tools.process import start_mt5, stop_mt5, get_mt5_status, watch_mt5
-```
+# Infrastructure (Phase 1)
+from tools.process    import start_mt5, stop_mt5, restart_mt5, get_mt5_status, watch_mt5
+from tools.files      import read_ea_file, write_ea_file, backup_ea, restore_ea, list_eas
+from tools.logs       import get_latest_journal, get_trade_history, detect_anomalies, get_compile_errors
+from tools.notify     import send, send_trade_alert, send_daily_report, send_error
+from tools.scheduler  import get_current_session, schedule_task, is_market_open, wait_for_session
 
-### Files
-```python
-from tools.files import read_ea_file, write_ea_file, backup_ea, restore_ea, list_eas
-```
+# Application (Phase 2)
+from tools.developer  import compile_ea, compile_and_fix, deploy_ea
+from tools.tester     import run_backtest, run_multi_backtest, get_tester_report
+from tools.optimizer  import run_optimization, walk_forward_test
+from tools.manager    import get_system_health, list_active_bots, switch_account, get_connection_quality
+from tools.operator   import get_open_positions, close_all_positions, get_account_summary
 
-### Logs
-```python
-from tools.logs import get_latest_journal, get_trade_history, detect_anomalies
-```
-
-### Notify
-```python
-from tools.notify import send, send_trade_alert, send_daily_report, send_error
-```
-
-### Schedule
-```python
-from tools.scheduler import get_current_session, schedule_task, is_market_open
-```
-
-### Developer
-```python
-from tools.developer import compile_ea, compile_and_fix, deploy_ea
-```
-
-### Operator
-```python
-from tools.operator import get_open_positions, close_all_positions, get_account_summary
+# Central Config
+from config.config    import get_config
+cfg = get_config()
+print(cfg.default_symbol)   # XAUUSDm
+print(cfg.experts_path)     # Path object
 ```
 
 ---
 
-## Troubleshooting
+## Configuration Files
 
-| Problem | Solution |
-|---------|----------|
-| "MT5 not found" | Update `config/mt5_paths.json` with correct path |
-| "Telegram not working" | Run `test_connection("telegram")` to debug |
-| "EA won't compile" | Check errors in `get_compile_errors()` output |
-| "Backtest stuck" | Verify symbol exists and data is loaded |
-| "Position close fails" | Check account status and ask for confirmation |
-| "Notifications queue slow" | Disable `async_send=True` to send immediately |
-| "Market session wrong" | Verify timezone in `config/settings.json` |
+| ไฟล์ | วัตถุประสงค์ | แก้เองได้? |
+|------|------------|-----------|
+| `config/user_config.json` | ตั้งค่าทั้งหมด (symbol, path, dates, ...) | ✅ แก้ที่นี่เท่านั้น |
+| `config/config.py` | อ่าน user_config แล้ว build paths | ❌ อย่าแก้ |
+| `config/mt5_paths.json` | Paths สำหรับ backward compat | ❌ auto-generated |
+| `config/notify_settings.json` | Telegram/Line tokens | ✅ ใส่ token ของตัวเอง |
+| `config/settings.json` | Logging, scheduler settings | ✅ ถ้าต้องการ |
 
 ---
 
@@ -298,74 +366,74 @@ from tools.operator import get_open_positions, close_all_positions, get_account_
 
 ```
 mt5_automation/
-├── SKILL.md                  ← You are here
-├── PHASE1_OVERVIEW.md        ← Infrastructure details
-├── PHASE2_OVERVIEW.md        ← Application details
+├── SKILL.md                    ← คู่มือนี้
+├── PHASE2_OVERVIEW.md          ← รายละเอียด Phase 2
 ├── config/
-│   ├── mt5_paths.json        ← Auto-detected paths
-│   ├── notify_settings.json  ← Notification config
-│   └── settings.json         ← Global settings
+│   ├── user_config.json        ← ⭐ แก้ที่นี่ที่เดียว
+│   ├── config.py               ← central config (อย่าแก้)
+│   ├── config_auto.py          ← auto-detect paths
+│   ├── mt5_paths.json          ← auto-generated
+│   ├── notify_settings.json    ← ใส่ Telegram token
+│   └── settings.json           ← logging, timezone
 ├── tools/
-│   ├── process/              ← MT5 process control
-│   ├── files/                ← File management
-│   ├── logs/                 ← Log parsing
-│   ├── notify/               ← Notifications
-│   ├── scheduler/            ← Task scheduling
-│   ├── developer/            ← EA compilation
-│   ├── operator/             ← Live trading
-│   ├── tester/               ← Backtesting
-│   ├── optimizer/            ← Optimization
-│   └── manager/              ← System health
+│   ├── process/                ← MT5 process control
+│   ├── files/                  ← file management
+│   ├── logs/                   ← log parsing
+│   ├── notify/                 ← notifications
+│   ├── scheduler/              ← task scheduling
+│   ├── developer/              ← EA compilation
+│   ├── operator/               ← live trading
+│   ├── tester/                 ← backtesting
+│   ├── optimizer/              ← optimization
+│   └── manager/                ← system health
 └── tests/
-    ├── test_all.py           ← Integration tests
-    └── test_*.py             ← Individual tool tests
+    ├── test_all.py
+    └── test_*.py
 ```
 
 ---
 
 ## Best Practices
 
-1. **Always check MT5 before operations**
-   ```python
-   status = get_mt5_status()
-   if not status["is_running"]:
-       start_mt5()
-       time.sleep(5)  # Wait to fully load
-   ```
+**1. เช็ค MT5 ก่อนทำงานทุกครั้ง**
+```python
+from tools.process import get_mt5_status, start_mt5
+status = get_mt5_status()
+if not status["is_running"]:
+    start_mt5()
+```
 
-2. **Wrap in error handling**
-   ```python
-   result = compile_ea("MyEA")
-   if result["status"] != "success":
-       logger.error(result["error"])
-       send_error("compile", result["error"])
-   ```
+**2. Backup ก่อนแก้ EA**
+```python
+backup_ea("SukarEA", tag="before_optimization")
+```
 
-3. **Back up before changes**
-   ```python
-   backup_ea("MyEA", tag="v1.0_before_optimization")
-   # ... make changes ...
-   ```
+**3. ใช้ Walk-Forward ก่อน live เสมอ**
+```python
+wf = walk_forward_test("SukarEA", param_ranges)
+if not wf["summary"]["is_robust"]:
+    print("⚠️ ไม่แนะนำ — WF efficiency ต่ำกว่า 70%")
+```
 
-4. **Use session-aware scheduling**
-   ```python
-   task = schedule_task(trade_func, "session_open", session="London")
-   ```
-
-5. **Monitor important operations**
-   ```python
-   watch_mt5(auto_restart=True, callback=alert_on_crash)
-   ```
+**4. ตั้ง Emergency Monitor**
+```python
+watch_mt5(auto_restart=True, callback=on_crash)
+```
 
 ---
 
-## Support
+## Troubleshooting
 
-- **Repository:** https://github.com/anatsrii/openclaw_tools_mt5_automation
-- **Issues:** Create issue on GitHub
-- **Tests:** `python tests/test_all.py`
+| ปัญหา | วิธีแก้ |
+|-------|---------|
+| "MT5 not found" | เช็ค `mt5.installation_path` ใน `user_config.json` |
+| "Terminal data not found" | เช็ค `mt5.terminal_id` และ `mt5.username` |
+| "Telegram not working" | เช็ค `notify_settings.json` — bot_token และ chat_id |
+| "Backtest timeout" | เพิ่ม `backtest.timeout_seconds` ใน `user_config.json` |
+| "No report found" | ตรวจว่า MT5 run backtest จบแล้ว / เช็ค `mt5_tester` path |
+| "MT5 API not connected" | รัน `pip install MetaTrader5` และเปิด MT5 ก่อน |
+| "Wrong session time" | เช็ค `timezone: Asia/Bangkok` ใน `settings.json` |
 
 ---
 
-**Version:** 2.0 | **Author:** anatsrii | **License:** MIT
-
+**Version:** 3.0 | **Author:** anatsrii | **License:** MIT

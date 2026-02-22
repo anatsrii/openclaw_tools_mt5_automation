@@ -288,8 +288,10 @@ except KeyboardInterrupt:
 ## Configuration Files
 
 The module reads configuration from:
-- `config/mt5_paths.json` - MT5 installation paths
-- `config/settings.json` - Global settings (logging, timeouts, etc.)
+- `config/user_config.json` - ⭐ ไฟล์หลัก แก้ที่นี่ที่เดียว (path, username, terminal_id)
+- `config/config.py` - Central config — build paths จาก user_config อัตโนมัติ
+- `config/mt5_paths.json` - Backward compat (auto-generated, อย่าแก้ตรงๆ)
+- `config/settings.json` - Global settings (logging, timeouts, timezone)
 
 ## Dependencies
 

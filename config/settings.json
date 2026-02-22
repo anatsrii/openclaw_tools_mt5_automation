@@ -18,7 +18,7 @@
   },
   "scheduler": {
     "enabled": true,
-    "timezone": "UTC",
+    "timezone": "Asia/Bangkok",
     "thread_pool_size": 4
   },
   "process": {

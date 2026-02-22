@@ -1,10 +1,14 @@
 {
+  "_comment": "Auto-generated from user_config.json — อย่าแก้ไฟล์นี้ตรงๆ แก้ที่ user_config.json แทน",
   "mt5_installation_path": "C:\\Program Files\\MetaTrader 5\\",
-  "mt5_data_path": "C:\\Users\\JML-PC\\.openclaw\\tools\\metatrader5",
+  "mt5_data_path": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\",
+  "mt5_terminal_id": "D0E8209F77C8CF37AD8BF550E51FF075",
   "mt5_terminalini": "C:\\Program Files\\MetaTrader 5\\config\\terminal.ini",
-  "mt5_logs": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\logs",
-  "mt5_profiles": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\profiles",
-  "mt5_experts": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\MQL5\\Experts",
-  "mt5_indicators": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\MQL5\\Indicators",
-  "mt5_scripts": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\MQL5\\Scripts"
+  "mt5_logs": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\logs",
+  "mt5_profiles": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\config",
+  "mt5_tester": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\Tester",
+  "mt5_experts": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\MQL5\\Experts",
+  "mt5_indicators": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\MQL5\\Indicators",
+  "mt5_scripts": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\MQL5\\Scripts",
+  "mt5_include": "C:\\Users\\JML-PC\\AppData\\Roaming\\MetaQuotes\\Terminal\\D0E8209F77C8CF37AD8BF550E51FF075\\MQL5\\Include"
 }
