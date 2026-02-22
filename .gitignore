@@ -50,3 +50,6 @@ tmpclaude-*.cwd
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Internal planning docs (not for public repo)
+PHASE2_OVERVIEW.md
