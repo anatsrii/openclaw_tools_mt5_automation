@@ -63,29 +63,30 @@ In MT5: File → Open Data Folder → copy the hex folder name from the path. Or
 C:\Users\<you>\AppData\Roaming\MetaQuotes\Terminal\<TERMINAL_ID>\
 ```
 
-**2. Edit one file — `config/user_config.json`**
+**2. Configure — choose one option**
 
-```json
-{
-  "mt5": {
-    "terminal_id": "YOUR_TERMINAL_ID",
-    "installation_path": "C:\\Program Files\\MetaTrader 5",
-    "username": "YOUR_WINDOWS_USERNAME"
-  },
-  "trading": {
-    "default_symbol": "XAUUSDm",
-    "default_timeframe": 15,
-    "default_date_from": "2026.01.01",
-    "default_date_to": "2026.01.31",
-    "deposit": 300,
-    "currency": "USD",
-    "leverage": 200
-  },
-  "backtest": {
-    "timeout": 300
-  }
-}
+*Option A: Config file (recommended for local dev)*
+
+```bash
+cp config/user_config.example.json config/user_config.json
+# then edit user_config.json with your values
 ```
+
+*Option B: Environment variables (CI/CD or shared machines)*
+
+```bash
+# Required
+set MT5_TERMINAL_ID=YOUR_TERMINAL_ID
+set MT5_USERNAME=YOUR_WINDOWS_USERNAME
+
+# Optional (have defaults)
+set MT5_INSTALL_PATH=C:\Program Files\MetaTrader 5
+set MT5_TERMINAL_EXE=terminal64.exe
+set MT5_SYMBOL=XAUUSDm
+set MT5_TIMEFRAME=15
+```
+
+Env vars take priority over the config file — useful when you don't want credentials on disk.
 
 **3. Verify everything is found**
 

@@ -107,7 +107,7 @@ python config/config.py
 ผลลัพธ์ที่ควรเห็น:
 ```
 === MT5 Config Summary ===
-Terminal ID : D0E8209F77C8CF37AD8BF550E51FF075
+Terminal ID : D0E82...FF075 (your terminal ID)
 Install     : C:\Program Files\MetaTrader 5
 ...
 === Path Validation ===
@@ -132,9 +132,9 @@ python tests/test_all.py
 ```json
 {
   "mt5": {
-    "terminal_id": "D0E8209F77C8CF37AD8BF550E51FF075",   ← Terminal ID
+    "terminal_id": "YOUR_TERMINAL_ID",               ← Terminal ID
     "installation_path": "C:\\Program Files\\MetaTrader 5", ← ที่ติดตั้ง MT5
-    "username": "JML-PC"                                  ← Windows username
+    "username": "YOUR_WINDOWS_USERNAME"                  ← Windows username
   },
 
   "trading": {

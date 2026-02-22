@@ -53,3 +53,7 @@ htmlcov/
 
 # Internal planning docs (not for public repo)
 PHASE2_OVERVIEW.md
+
+# Personal config — contains sensitive paths/IDs
+# Copy user_config.example.json → user_config.json and fill in your values
+config/user_config.json

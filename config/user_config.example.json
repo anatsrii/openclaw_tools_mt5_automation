@@ -1,0 +1,35 @@
+{
+  "_comment": "Copy this file to user_config.json and fill in your values. Or use environment variables instead (see README).",
+
+  "mt5": {
+    "terminal_id":       "YOUR_TERMINAL_ID",
+    "installation_path": "C:\\Program Files\\MetaTrader 5",
+    "terminal_exe":      "terminal64.exe",
+    "username":          "YOUR_WINDOWS_USERNAME"
+  },
+
+  "trading": {
+    "default_symbol":    "XAUUSDm",
+    "default_timeframe": 15,
+    "symbols":           ["XAUUSDm"],
+    "default_date_from": "2026.01.01",
+    "default_date_to":   "2026.01.31"
+  },
+
+  "backtest": {
+    "deposit":           300,
+    "currency":          "USD",
+    "leverage":          200,
+    "model":             1,
+    "timeout_seconds":   300
+  },
+
+  "optimization": {
+    "top_n_results":             10,
+    "criterion":                 2,
+    "wf_windows":                4,
+    "wf_test_ratio":             0.3,
+    "wf_efficiency_threshold":   0.7,
+    "timeout_per_window":        900
+  }
+}
